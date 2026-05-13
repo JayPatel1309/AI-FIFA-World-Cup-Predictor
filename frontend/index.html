@@ -1,0 +1,592 @@
+# main.html
+
+```html
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>World Cup Predictor AI</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #0b1020;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glow {
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+        }
+
+        .gradient-border {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .gradient-border::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 1px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #38bdf8, #22c55e);
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        select {
+            appearance: none;
+        }
+
+        .progress-fill {
+            transition: width 1s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-3px);
+            transition: 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="w-full border-b border-white/10 sticky top-0 z-50 backdrop-blur-xl bg-[#0b1020]/80">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-cyan-400">⚽ World Cup Predictor AI</h1>
+                <p class="text-sm text-gray-400">Football Match Outcome Prediction using Machine Learning</p>
+            </div>
+
+            <button class="bg-cyan-400 text-black px-5 py-2 rounded-xl font-semibold hover:scale-105 transition glow">
+                ML Powered
+            </button>
+        </div>
+    </nav>
+
+
+    <!-- Main Section -->
+    <main class="max-w-7xl mx-auto px-6 py-10 grid lg:grid-cols-2 gap-8">
+
+        <!-- Left Side -->
+        <section class="gradient-border glass p-8 rounded-3xl relative overflow-hidden">
+
+            <div class="absolute -top-20 -right-20 w-56 h-56 bg-cyan-500/20 blur-[120px] rounded-full"></div>
+
+            <h2 class="text-2xl font-bold mb-8">Match Configuration</h2>
+
+            <!-- Home Team -->
+            <div class="mb-6">
+                <label class="block mb-2 text-gray-300 font-semibold">Home Team</label>
+
+                <select id="homeTeam"
+                    class="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-4 text-white outline-none focus:border-cyan-400">
+
+                    <option>Argentina</option>
+                    <option>Brazil</option>
+                    <option>France</option>
+                    <option>Germany</option>
+                    <option>England</option>
+                    <option>Portugal</option>
+                    <option>Spain</option>
+                    <option>Netherlands</option>
+                    <option>Belgium</option>
+                    <option>Croatia</option>
+                    <option>Morocco</option>
+                </select>
+            </div>
+
+            <!-- Away Team -->
+            <div class="mb-6">
+                <label class="block mb-2 text-gray-300 font-semibold">Away Team</label>
+
+                <select id="awayTeam"
+                    class="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-4 text-white outline-none focus:border-green-400">
+
+                    <option>France</option>
+                    <option>Brazil</option>
+                    <option>Argentina</option>
+                    <option>Germany</option>
+                    <option>England</option>
+                    <option>Portugal</option>
+                    <option>Spain</option>
+                    <option>Netherlands</option>
+                    <option>Belgium</option>
+                    <option>Croatia</option>
+                    <option>Morocco</option>
+                </select>
+            </div>
+
+
+            <!-- Match Type -->
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+
+                <div>
+                    <label class="block mb-2 text-gray-300 font-semibold">Match Type</label>
+
+                    <select id="matchType"
+                        class="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-4 text-white outline-none">
+
+                        <option value="0">Competitive Match</option>
+                        <option value="1">Friendly Match</option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label class="block mb-2 text-gray-300 font-semibold">Venue</label>
+
+                    <select id="venue"
+                        class="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-4 text-white outline-none">
+
+                        <option value="1">Home Advantage</option>
+                        <option value="0">Neutral Venue</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <!-- Predict Button -->
+            <button id="predictBtn"
+                class="w-full bg-gradient-to-r from-cyan-400 to-green-400 text-black py-4 rounded-2xl font-bold text-lg hover:scale-[1.02] transition-all glow">
+                Predict Match
+            </button>
+
+
+            <!-- Feature Box -->
+            <div class="mt-8 glass p-5 rounded-2xl border border-white/5">
+                <h3 class="text-lg font-bold mb-4">Model Features</h3>
+
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="bg-[#111827] p-4 rounded-xl">
+                        <p class="text-gray-400">Elo Difference</p>
+                        <p id="eloDiff" class="text-cyan-400 text-xl font-bold">0</p>
+                    </div>
+
+                    <div class="bg-[#111827] p-4 rounded-xl">
+                        <p class="text-gray-400">Home Form</p>
+                        <p id="homeForm" class="text-green-400 text-xl font-bold">0</p>
+                    </div>
+
+                    <div class="bg-[#111827] p-4 rounded-xl">
+                        <p class="text-gray-400">Away Form</p>
+                        <p id="awayForm" class="text-red-400 text-xl font-bold">0</p>
+                    </div>
+
+                    <div class="bg-[#111827] p-4 rounded-xl">
+                        <p class="text-gray-400">Goal Difference</p>
+                        <p id="goalDiff" class="text-yellow-400 text-xl font-bold">0</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Right Side -->
+        <section class="flex flex-col gap-8">
+
+            <!-- Prediction Card -->
+            <div class="gradient-border glass p-8 rounded-3xl">
+
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold">Prediction Results</h2>
+                        <p class="text-gray-400">Multinomial Logistic Regression Output</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Match Header -->
+                <div class="text-center mb-8">
+                    <h1 id="matchHeader" class="text-4xl font-bold text-white">
+                        Argentina vs France
+                    </h1>
+                </div>
+
+
+                <!-- Progress Bars -->
+
+                <!-- Home Win -->
+                <div class="mb-8">
+                    <div class="flex justify-between mb-2">
+                        <span id="homeWinText" class="font-semibold">Argentina Win</span>
+                        <span id="homePercent" class="text-cyan-400 font-bold text-xl">45%</span>
+                    </div>
+
+                    <div class="w-full bg-[#111827] h-5 rounded-full overflow-hidden">
+                        <div id="homeBar"
+                            class="progress-fill h-full bg-gradient-to-r from-cyan-400 to-cyan-600 rounded-full"
+                            style="width:45%"></div>
+                    </div>
+                </div>
+
+
+                <!-- Draw -->
+                <div class="mb-8">
+                    <div class="flex justify-between mb-2">
+                        <span class="font-semibold">Draw</span>
+                        <span id="drawPercent" class="text-gray-300 font-bold text-xl">25%</span>
+                    </div>
+
+                    <div class="w-full bg-[#111827] h-5 rounded-full overflow-hidden">
+                        <div id="drawBar"
+                            class="progress-fill h-full bg-gradient-to-r from-gray-400 to-gray-600 rounded-full"
+                            style="width:25%"></div>
+                    </div>
+                </div>
+
+
+                <!-- Away Win -->
+                <div class="mb-8">
+                    <div class="flex justify-between mb-2">
+                        <span id="awayWinText" class="font-semibold">France Win</span>
+                        <span id="awayPercent" class="text-green-400 font-bold text-xl">30%</span>
+                    </div>
+
+                    <div class="w-full bg-[#111827] h-5 rounded-full overflow-hidden">
+                        <div id="awayBar"
+                            class="progress-fill h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full"
+                            style="width:30%"></div>
+                    </div>
+                </div>
+
+
+                <!-- AI Summary -->
+                <div class="glass rounded-2xl p-5 border border-white/10">
+                    <h3 class="text-lg font-bold mb-2">AI Match Analysis</h3>
+
+                    <p id="analysisText" class="text-gray-300 leading-relaxed">
+                        Argentina is slightly favored due to stronger Elo ratings and better recent form.
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- Charts and Stats -->
+            <div class="grid md:grid-cols-2 gap-8">
+
+                <!-- Chart -->
+                <div class="gradient-border glass p-6 rounded-3xl flex flex-col items-center justify-center">
+                    <h3 class="text-xl font-bold mb-4">Probability Distribution</h3>
+
+                    <canvas id="predictionChart" width="300" height="300"></canvas>
+                </div>
+
+
+                <!-- Team Analytics -->
+                <div class="gradient-border glass p-6 rounded-3xl">
+                    <h3 class="text-xl font-bold mb-6">Team Analytics</h3>
+
+                    <div class="space-y-5">
+
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span>Elo Rating Advantage</span>
+                                <span class="text-cyan-400">+120</span>
+                            </div>
+
+                            <div class="w-full h-3 bg-[#111827] rounded-full overflow-hidden">
+                                <div class="h-full bg-cyan-400 w-[70%]"></div>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span>Recent Form</span>
+                                <span class="text-green-400">Strong</span>
+                            </div>
+
+                            <div class="w-full h-3 bg-[#111827] rounded-full overflow-hidden">
+                                <div class="h-full bg-green-400 w-[65%]"></div>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span>Goal Difference Form</span>
+                                <span class="text-yellow-400">Dominant</span>
+                            </div>
+
+                            <div class="w-full h-3 bg-[#111827] rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-400 w-[75%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="mt-16 border-t border-white/10 py-8 text-center text-gray-500">
+        Built using Machine Learning, Logistic Regression, Elo Ratings, and Football Analytics.
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script>
+
+        // Dummy Team Stats
+        const teamStats = {
+            "Argentina": { elo: 2135, form: 12, goalDiff: 2.1 },
+            "Brazil": { elo: 2080, form: 10, goalDiff: 1.8 },
+            "France": { elo: 2050, form: 9, goalDiff: 1.5 },
+            "Germany": { elo: 1980, form: 8, goalDiff: 1.1 },
+            "England": { elo: 2040, form: 11, goalDiff: 1.7 },
+            "Portugal": { elo: 2000, form: 9, goalDiff: 1.3 },
+            "Spain": { elo: 2025, form: 10, goalDiff: 1.6 },
+            "Netherlands": { elo: 1995, form: 8, goalDiff: 1.2 },
+            "Belgium": { elo: 1970, form: 7, goalDiff: 1.0 },
+            "Croatia": { elo: 1940, form: 8, goalDiff: 0.9 },
+            "Morocco": { elo: 1920, form: 9, goalDiff: 1.1 }
+        };
+
+
+        // Chart.js
+        const ctx = document.getElementById('predictionChart');
+
+        const chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Home Win', 'Draw', 'Away Win'],
+                datasets: [{
+                    data: [45, 25, 30],
+                    backgroundColor: ['#38bdf8', '#9ca3af', '#22c55e'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                }
+            }
+        });
+
+
+        // Prediction Logic Placeholder
+        document.getElementById(
+        "predictBtn"
+        ).addEventListener(
+        "click",
+        async () => {
+
+            const homeTeam =
+            document.getElementById(
+                "homeTeam"
+            ).value;
+
+            const awayTeam =
+            document.getElementById(
+                "awayTeam"
+            ).value;
+
+            const venue =
+            document.getElementById(
+                "venue"
+            ).value;
+
+            const matchType =
+            document.getElementById(
+                "matchType"
+            ).value;
+
+            // Validation
+            if (homeTeam === awayTeam) {
+
+            alert(
+                "Please select different teams"
+            );
+
+            return;
+            }
+
+            // Loading state
+            document.getElementById(
+            "analysisText"
+            ).innerText =
+            "Running AI prediction...";
+
+            try {
+
+            // API Request
+            const response = await fetch(
+                "http://127.0.0.1:8000/predict",
+                {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    home_team: homeTeam,
+
+                    away_team: awayTeam,
+
+                    neutral:
+                    venue === "0",
+
+                    friendly:
+                    matchType === "1"
+                })
+                }
+            );
+
+            const data =
+                await response.json();
+
+            // Error handling
+            if (data.error) {
+
+                alert(data.error);
+
+                return;
+            }
+
+            // Probabilities
+            const probs =
+                data.probabilities;
+
+            // Update percentages
+            document.getElementById(
+                "homePercent"
+            ).innerText =
+                `${probs.home_win}%`;
+
+            document.getElementById(
+                "drawPercent"
+            ).innerText =
+                `${probs.draw}%`;
+
+            document.getElementById(
+                "awayPercent"
+            ).innerText =
+                `${probs.away_win}%`;
+
+            // Update bars
+            document.getElementById(
+                "homeBar"
+            ).style.width =
+                `${probs.home_win}%`;
+
+            document.getElementById(
+                "drawBar"
+            ).style.width =
+                `${probs.draw}%`;
+
+            document.getElementById(
+                "awayBar"
+            ).style.width =
+                `${probs.away_win}%`;
+
+            // Match title
+            document.getElementById(
+                "matchHeader"
+            ).innerText =
+                `${homeTeam} vs ${awayTeam}`;
+
+            // Team labels
+            document.getElementById(
+                "homeWinText"
+            ).innerText =
+                `${homeTeam} Win`;
+
+            document.getElementById(
+                "awayWinText"
+            ).innerText =
+                `${awayTeam} Win`;
+
+            // Feature values
+            document.getElementById(
+                "eloDiff"
+            ).innerText =
+                data.features.elo_diff;
+
+            document.getElementById(
+                "homeForm"
+            ).innerText =
+                data.features.home_form;
+
+            document.getElementById(
+                "awayForm"
+            ).innerText =
+                data.features.away_form;
+
+            document.getElementById(
+                "goalDiff"
+            ).innerText =
+                (
+                data.features
+                .home_goal_diff_form -
+                data.features
+                .away_goal_diff_form
+                ).toFixed(2);
+
+            // AI analysis
+            if (
+                probs.home_win >
+                probs.away_win
+            ) {
+
+                document.getElementById(
+                "analysisText"
+                ).innerText =
+                `${homeTeam} is favored due to stronger recent performance and superior statistical metrics.`;
+
+            } else {
+
+                document.getElementById(
+                "analysisText"
+                ).innerText =
+                `${awayTeam} appears statistically stronger and may outperform ${homeTeam}.`;
+            }
+
+            } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Could not connect to backend"
+            );
+            }
+        }
+        );
+    </script>
+
+</body>
+
+</html>
