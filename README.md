@@ -1,185 +1,86 @@
 # ⚽ AI FIFA World Cup Predictor
 
-An AI-powered football match prediction system that uses **Elo Ratings, team form, goal statistics, and home advantage** to predict international football match outcomes and simulate FIFA World Cup scenarios.
+An end-to-end Machine Learning powered football match prediction system that predicts the probability of a **Home Win**, **Draw**, or **Away Win** using historical football analytics and Elo-based performance metrics.
 
-Built using **Python, Pandas, Scikit-learn/XGBoost, and Streamlit**, this project combines sports analytics with machine learning to create a realistic football prediction engine.
+Built with:
+- 🤖 Machine Learning
+- ⚡ FastAPI
+- 🎨 Modern Frontend UI
+- 📊 Football Analytics
 
 ---
 
 ## 🚀 Features
 
-* 📊 **Elo Rating Integration**
-  Uses international team Elo ratings to measure team strength dynamically.
-
-* 🔥 **Recent Form Analysis**
-  Calculates performance based on the last 5 matches.
-
-* ⚽ **Goal Statistics**
-  Tracks average goals scored and conceded.
-
-* 🏠 **Home Advantage Detection**
-  Includes home/away/neutral venue impact.
-
-* 🤖 **Machine Learning Predictions**
-  Predicts:
-
-  * Win
-  * Draw
-  * Loss
-
-* 🌍 **World Cup Match Simulation**
-  Simulate tournament outcomes using trained models.
-
-* 📈 **Data Visualization Dashboard**
-  Interactive charts and analytics using Streamlit.
+- Predict football match outcomes in real time
+- Probability prediction for:
+  - Home Win
+  - Draw
+  - Away Win
+- Elo rating based analysis
+- Team form & goal difference evaluation
+- Home advantage support
+- Friendly vs Competitive match support
+- Interactive charts and analytics dashboard
+- Glassmorphism inspired modern UI
 
 ---
 
-# 🧠 Tech Stack
+## 🧠 Machine Learning Model
 
-### Languages & Libraries
+The project uses:
 
-* Python
-* Pandas
-* NumPy
-* Scikit-learn
-* XGBoost
-* Matplotlib
-* Streamlit
+- **Multinomial Logistic Regression**
+- **StandardScaler**
+- Feature engineered football analytics
 
-### Data Sources
+### Features Used
 
-* International Football Match Results
-* Elo Ratings Dataset
+| Feature | Description |
+|---|---|
+| elo_diff | Elo rating difference |
+| home_form | Recent home team form |
+| away_form | Recent away team form |
+| home_advantage | Venue advantage |
+| is_friendly | Match type |
+| home_goal_diff_form | Home goal trend |
+| away_goal_diff_form | Away goal trend |
 
 ---
 
-# 📂 Project Structure
+## 🛠️ Tech Stack
+
+### Backend
+- Python
+- FastAPI
+- Pandas
+- Scikit-learn
+- Joblib
+
+### Frontend
+- HTML
+- Tailwind CSS
+- JavaScript
+- Chart.js
+
+### ML Techniques
+- Logistic Regression
+- Feature Engineering
+- Data Scaling
+
+---
+
+## 📂 Project Structure
 
 ```bash
-worldcup-predictor/
+AI-FIFA-World-Cup-Predictor/
 │
-├── data/
-│   ├── raw_matches.csv
-│   ├── elo_ratings.csv
-│   └── final_dataset.csv
+├── app.py
+├── main.py
+├── football_model.pkl
+├── scaler.pkl
+├── CombinedData.csv
+├── feature_engineering.ipynb
+├── index.html
 │
-├── notebooks/
-│   └── feature_engineering.ipynb
-│
-├── src/
-│   ├── scraper.py
-│   ├── preprocess.py
-│   ├── feature_engineering.py
-│   ├── train.py
-│   └── predict.py
-│
-├── app/
-│   └── streamlit_app.py
-│
-├── models/
-│   └── worldcup_model.pkl
-│
-├── requirements.txt
 └── README.md
-```
-
----
-
-# 📊 Dataset Features
-
-| Feature            | Description            |
-| ------------------ | ---------------------- |
-| elo_team           | Team Elo rating        |
-| elo_opp            | Opponent Elo rating    |
-| elo_diff           | Elo difference         |
-| recent_form        | Last 5 matches form    |
-| avg_goals_scored   | Average goals scored   |
-| avg_goals_conceded | Average goals conceded |
-| venue              | Home/Away/Neutral      |
-| win_streak         | Consecutive wins       |
-
----
-
-# 🎯 Machine Learning Goal
-
-Predict the probability of:
-
-* ✅ Team Win
-* 🤝 Draw
-* ❌ Team Loss
-
-using historical international football data.
-
----
-
-# 🛠️ Installation
-
-```bash
-git clone https://github.com/yourusername/worldcup-predictor.git
-
-cd worldcup-predictor
-
-pip install -r requirements.txt
-```
-
----
-
-# ▶️ Run the Project
-
-## Train the Model
-
-```bash
-python src/train.py
-```
-
-## Launch Streamlit App
-
-```bash
-streamlit run app/streamlit_app.py
-```
-
----
-
-# 📈 Future Improvements
-
-* Deep Learning Match Predictor
-* Live API Integration
-* Player-level statistics
-* Injury & lineup analysis
-* Betting odds comparison
-* Tournament bracket simulation
-* Real-time prediction dashboard
-
----
-
-# 🌟 Why This Project?
-
-This project demonstrates:
-
-* Machine Learning
-* Feature Engineering
-* Data Cleaning
-* Sports Analytics
-* Model Deployment
-* End-to-End AI Workflow
-
-Perfect for:
-
-* AI/ML portfolios
-* GitHub showcases
-* Resume projects
-* Hackathons
-* Sports analytics research
-
----
-
-# 📜 License
-
-This project is licensed under the MIT License.
-
----
-
-# ⭐ Support
-
-If you like this project, consider giving it a ⭐ on GitHub!
