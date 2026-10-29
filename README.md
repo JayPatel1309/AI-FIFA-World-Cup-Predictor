@@ -14,6 +14,37 @@ A machine learning-based football match outcome prediction system. The applicati
 
 ---
 
+## Performance & Benchmark Metrics
+
+| Metric | Specification | Details |
+|---|---|---|
+| **Model Accuracy** | 58.17% | Evaluated on 7,411 test fixtures (70/30 split) across 3 outcomes. Random chance baseline is 33.3%. |
+| **Inference Latency** | ~0.40 ms | Per-request feature transformation and inference execution time. |
+| **Training Time** | ~2.50 s | Full model training on 17,290 samples using the Scikit-Learn L-BFGS solver. |
+| **Dataset Size** | 24,701 rows | Curated feature-engineered dataset (`data/CombinedData.csv`, 24 columns). |
+| **Raw Match Records** | 49,287 rows | Historical international match records (`data/results.csv`, 1872–present). |
+| **Elo Rankings** | 17,200 rows | Historical international rankings (`data/ranking_soccer_1901-2023.csv`). |
+| **Teams Indexed** | 222 teams | Distinct national football teams represented in the system. |
+| **Documents Indexed** | N/A | Structured tabular ML system; not an Information Retrieval (IR) / RAG pipeline. |
+| **Retrieval Accuracy** | N/A | Exact-match deterministic DataFrame lookup for team stats; no vector search used. |
+| **Deployment Profile** | Single-tenant | Local REST service hosted with FastAPI and Uvicorn with asynchronous concurrency. |
+
+### Classification Report
+
+```text
+              precision    recall  f1-score   support
+
+    Away Win       0.52      0.60      0.56      2018
+        Draw       0.35      0.01      0.02      1782
+    Home Win       0.61      0.86      0.72      3611
+
+    accuracy                           0.58      7411
+   macro avg       0.50      0.49      0.43      7411
+weighted avg       0.53      0.58      0.51      7411
+```
+
+---
+
 ## Tech Stack
 
 - **Backend:** Python, FastAPI, Uvicorn, Pydantic
